@@ -1,5 +1,7 @@
 import app from './app';
 
+let server:any;
+
 const port = 8000;
 
 app.listen(port, () => {
