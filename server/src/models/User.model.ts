@@ -1,16 +1,14 @@
 import bcrypt from 'bcryptjs';
-import { Document, Schema, model, models } from 'mongoose';
+import { Model, Schema, model, models } from 'mongoose';
 import { IUser } from '../interfaces/User';
+import { boolean } from 'joi';
 
-export interface IuserDocument extends Document, IUser {
-  matchPasswords(password: string): Promise<boolean>;
-  isEmailExist(
-    email: string,
-    excludeUserId?: Schema.Types.ObjectId
-  ): Promise<boolean>;
+export interface IUserDocument extends Model<IUser> {
+  isEmailExist(email:string, excludeUserId?:Schema.Types.ObjectId):Promise<boolean>
+  matchPasswords: (password:string) => Promise<boolean>
 }
 
-const UserSchema: Schema<IuserDocument> = new Schema(
+const UserSchema = new Schema<IUser, IUserDocument>(
   {
     name: {
       type: String,
@@ -26,6 +24,10 @@ const UserSchema: Schema<IuserDocument> = new Schema(
       type: String,
       required: true,
     },
+    isAdmin:{
+      type: Boolean,
+      default:false
+    }
   },
   {
     timestamps: true,
@@ -41,14 +43,11 @@ UserSchema.methods.matchPasswords = async function (
 
 // shcema fucntion to check the email exist or not
 UserSchema.static('isEmailExist', async function isEmailExist(email:string, excludeUserId:string){
-    const user:IuserDocument = await this.findOne({ email, _id: { $ne: excludeUserId }});
+    const user:IUserDocument | null = await this.findOne({ email, _id: { $ne: excludeUserId }});
     return !!user
 })
 
 UserSchema.pre('save', async function (next) {
-  if (process?.env?.NODE_ENV && process.env.NODE_ENV === 'development') {
-    console.log('Middleware called before saving the user is', this);
-  }
   const user = this;
   if (user.isModified('password')) {
     const salt = await bcrypt.genSalt(12);
@@ -57,4 +56,5 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-export default models.User || model<IuserDocument>('User', UserSchema);
+const UserModel = model<IUser, IUserDocument>('User', UserSchema);
+export default UserModel;
