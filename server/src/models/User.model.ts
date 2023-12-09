@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Document, Schema } from 'mongoose';
+import { Document, Schema, model, models } from 'mongoose';
 import { IUser } from '../interfaces/User';
 
 export interface IuserDocument extends Document, IUser {
@@ -56,3 +56,5 @@ UserSchema.pre('save', async function (next) {
   }
   next();
 });
+
+export default models.User || model<IuserDocument>('User', UserSchema);
