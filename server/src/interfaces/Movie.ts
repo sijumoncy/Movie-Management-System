@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export interface IMovie extends Document {
     title: string,
+    description?:String,
     releaseYear:string,
     releaseMonth?:string,
     releaseDate?:number,

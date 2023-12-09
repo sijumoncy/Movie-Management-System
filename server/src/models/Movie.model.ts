@@ -10,6 +10,10 @@ export const MovieSchema: Schema<IMovie> = new Schema(
       trim: true,
       required: true,
     },
+    description:{
+      type:String,
+      default:''
+    },
     releaseYear: {
       type: String,
       trim: true,
@@ -27,6 +31,7 @@ export const MovieSchema: Schema<IMovie> = new Schema(
       type: number,
       min: 0,
       max: 5,
+      default:0
     },
     duration: {
       type: String,
