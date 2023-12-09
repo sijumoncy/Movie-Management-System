@@ -1,5 +1,6 @@
 import express from 'express'
 import userRoute from './user'
+import movieRoute from './movie'
 
 
 const router = express.Router()
@@ -8,6 +9,10 @@ const appRoutes = [
     {
         path:'/users',
         route: userRoute
+    },
+    {
+        path:'/movies',
+        route: movieRoute
     },
 ]
 

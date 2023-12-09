@@ -13,7 +13,7 @@ const createUserController = async (req: IAuthRequest, res: Response) => {
 };
 
 const getUsersController = async (req: IAuthRequest, res: Response) => {
-    const filter = pickKeyValues(req.query, ['name', 'country', 'city', 'zip']);
+    const filter = pickKeyValues(req.query, ['name']);
     const options = pickKeyValues(req.query, ['limit', 'page']);
     const result = await getUsersService(filter, options);
     res.status(httpStatus.OK).send(result);

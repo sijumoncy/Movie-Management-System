@@ -27,6 +27,8 @@ const getMovies = {
     }),
     director: Joi.string(),
     language: Joi.string(),
+    userId: Joi.string(),
+    movieId: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
