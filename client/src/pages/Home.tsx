@@ -1,9 +1,12 @@
-
+import Navbar from "../components/Nav/Navbar";
 
 function HomePage() {
   return (
-    <div>Home</div>
-  )
+    <div className="bg-gray-200">
+      <Navbar />
+      <div>Home</div>
+    </div>
+  );
 }
 
-export default HomePage
+export default HomePage;
