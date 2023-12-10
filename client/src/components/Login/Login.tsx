@@ -1,7 +1,9 @@
-import { ChangeEvent, MouseEvent, useContext, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { ILogin } from "../../Interface/Login";
 import axios from "../../api/axios";
-import { AuthContext } from "../../context/authContext";
+
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const emailInpRef = useRef<HTMLInputElement>(null);
@@ -13,9 +15,8 @@ function Login() {
 
   const [error, setError] = useState<string>('');
 
-  const {setAuth, auth} = useContext(AuthContext)
-
-  console.log({auth});
+  const {setAuth} = useAuth()
+  const navigate = useNavigate();
 
   // const [success, setSuccess] = useState(false)
 
@@ -53,12 +54,14 @@ function Login() {
           setAuth({
             tokens: data.tokens,
             user: {
-              email : data.email,
-              id :data._id,
-              isAdmin :data.isAdmin,
-              name : data.name
+              email : data.user.email,
+              id :data.user._id,
+              isAdmin :data.user.isAdmin,
+              name : data.user.name
             }
           })
+
+          navigate('/')
           
       } catch(err) {
         console.log("register errr", err);

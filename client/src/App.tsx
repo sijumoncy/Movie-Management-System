@@ -1,3 +1,4 @@
+import RequireAuth from "./components/RequireAuth/RequireAuth";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -8,14 +9,16 @@ function App() {
   return (
     <div className="max-w-[1400px] mx-auto">
       <Routes>
-        <Route path="/login" element={<LoginPage />}/>
-        <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* protected */}
-        <Route path="/" element={<HomePage />}/>
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
 
         {/* catch all */}
-        <Route path="*" element={<NotFound/>}/>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useContext, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { RegistrationData } from "../../Interface/register";
 import {
   EMAIL_INPUT_REGEX,
@@ -7,7 +7,8 @@ import {
 } from "../../constant/regex";
 
 import axios from "../../api/axios";
-import { AuthContext } from "../../context/authContext";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const userRef = useRef<HTMLInputElement>(null);
@@ -26,7 +27,9 @@ function Register() {
     rePassword: "",
   });
 
-  const {setAuth} = useContext(AuthContext)
+  const {setAuth} = useAuth()
+
+  const navigate = useNavigate();
   
 
   // const [success, setSuccess] = useState(false)
@@ -101,12 +104,14 @@ function Register() {
           setAuth({
             tokens: data.tokens,
             user: {
-              email : data.email,
-              id :data._id,
-              isAdmin :data.isAdmin,
-              name : data.name
+              email : data.user.email,
+              id :data.user._id,
+              isAdmin :data.user.isAdmin,
+              name : data.user.name
             }
           })
+
+          navigate('/')
           
       } catch(err) {
         console.log("register errr", err);
