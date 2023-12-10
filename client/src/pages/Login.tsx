@@ -1,9 +1,10 @@
+import Login from "../components/Login/Login"
 
 
-function LoginPage() {``
+function LoginPage() {
   return (
-    <div>Login</div>
+    <Login/>   
   )
-}``
+}
 
 export default LoginPage
