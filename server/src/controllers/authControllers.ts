@@ -14,18 +14,22 @@ import { Request, Response } from 'express';
 const registerController = async (req: Request, res: Response) => {
   const user = await createUserService(req.body);
   const tokens = await generateAuthTokenService(user._id);
+  const userData = user.toObject()
+  userData.password = ''
   res
     .status(httpStatus.CREATED)
-    .json({ message: 'user registration successfull', data: { user, tokens } });
+    .json({ message: 'user registration successfull', data: { user:userData, tokens } });
 };
 
 const loginController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await loginWithEmailAndPassword(email, password);
   const tokens = await generateAuthTokenService(user._id);
+  const userData = user.toObject()
+  userData.password = ''
   res
     .status(httpStatus.OK)
-    .json({ message: 'login successfull', data: { user, tokens } });
+    .json({ message: 'login successfull', data: { user:userData, tokens } });
 };
 
 const logoutController = async (req: Request, res: Response) => {

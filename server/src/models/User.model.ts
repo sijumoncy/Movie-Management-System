@@ -1,11 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { Model, Schema, model, models } from 'mongoose';
+import { Document, Model, Schema, model, models } from 'mongoose';
 import { IUser } from '../interfaces/User';
-import { boolean } from 'joi';
 
 export interface IUserDocument extends Model<IUser> {
   isEmailExist(email:string, excludeUserId?:Schema.Types.ObjectId):Promise<boolean>
-  matchPasswords: (password:string) => Promise<boolean>
 }
 
 const UserSchema = new Schema<IUser, IUserDocument>(
@@ -33,13 +31,6 @@ const UserSchema = new Schema<IUser, IUserDocument>(
     timestamps: true,
   }
 );
-
-UserSchema.methods.matchPasswords = async function (
-  candidatePassword: string
-): Promise<boolean> {
-  const isMatch = await bcrypt.compare(candidatePassword, this.password);
-  return isMatch;
-};
 
 // shcema fucntion to check the email exist or not
 UserSchema.static('isEmailExist', async function isEmailExist(email:string, excludeUserId:string){

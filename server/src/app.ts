@@ -13,12 +13,17 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
-app.options('*', cors());
+const corsOptions = {
+    origin: config.clientApp.url,
+    credentials: true,
+  };
+
+app.use(cors(corsOptions));
 
 // routes
 const baseUrl = config.apiBaseUrl
-app.use(`${baseUrl}/`, routes)
+
+app.use(`${baseUrl}`, routes)
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

@@ -28,7 +28,7 @@ export const MovieSchema: Schema<IMovie> = new Schema(
       max: 31,
     },
     rating: {
-      type: number,
+      type: Number,
       min: 0,
       max: 5,
       default:0

@@ -1,6 +1,7 @@
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { ILogin } from "../../Interface/Login";
 import { EMAIL_INPUT_REGEX } from "../../constant/regex";
+import axios from "../../api/axios";
 
 function Login() {
   const emailInpRef = useRef<HTMLInputElement>(null);
@@ -33,6 +34,19 @@ function Login() {
     if(loginData.email && loginData.password) {
       setError('')
       console.log({loginData})
+      try{
+        const resposne = await axios.post('/auth/login', JSON.stringify({
+            email : loginData.email,
+            password: loginData.password
+          }),{
+            headers: {'Content-Type':'application/json'},
+            withCredentials:true
+          })
+          console.log("resposne -----> ", resposne.data);
+          
+      } catch(err) {
+        console.log("register errr", err);
+      }
     } else{
       console.log("fields required");
       setError('All fields are required')
@@ -92,6 +106,7 @@ function Login() {
           <button
             className="bg-blue-400 mt-5 px-4 py-2 rounded-md text-white hover:bg-blue-500 duration-200"
             onClick={(e: MouseEvent) => handleLogin(e)}
+            disabled={!!error}
           >
             Login
           </button>

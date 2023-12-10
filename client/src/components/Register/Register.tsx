@@ -6,6 +6,8 @@ import {
   USER_NAME_INPUT_RGX,
 } from "../../constant/regex";
 
+import axios from "../../api/axios";
+
 function Register() {
   const userRef = useRef<HTMLInputElement>(null);
 
@@ -81,6 +83,20 @@ function Register() {
     if (validated) {
       // send registartion req
       console.log("validation success ", { error, registrationData });
+      try{
+        const resposne = await axios.post('/auth/register', JSON.stringify({
+            email : registrationData.email,
+            name : registrationData.name,
+            password: registrationData.password
+          }),{
+            headers: {'Content-Type':'application/json'},
+            withCredentials:true
+          })
+          console.log("resposne -----> ", resposne.data);
+          
+      } catch(err) {
+        console.log("register errr", err);
+      }
     }
   };
 

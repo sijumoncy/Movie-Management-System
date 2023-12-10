@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import TokenModel from '../models/TokenModel';
 import ApiError from '../utils/apiError';
+import bcrypt from 'bcryptjs';
 import { tokenTypes } from '../interfaces/Token'; 
 import {
   getUserByEmailService,
@@ -11,9 +12,17 @@ import { generateAuthTokenService, verifyToken } from './tokenServices';
 
 const loginWithEmailAndPassword = async (email: string, password: string) => {
   const user = await getUserByEmailService(email);
-  if (!user || !(await UserModel.matchPasswords(password))) {
+  
+  if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
+  
+  const isMatch = bcrypt.compareSync(password, user.password)
+
+  if(!isMatch){
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+  }
+
   return user;
 };
 
