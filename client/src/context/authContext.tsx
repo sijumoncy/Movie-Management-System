@@ -43,10 +43,7 @@ const AuthContextProvider = ({ children }: AuthProviderProps) => {
       setAuth(JSON.parse(authState))
     }
   },[])
-
-  console.log("=============>", {auth});
   
-
   return (
     <AuthContext.Provider value={{ auth, setAuth, logout }}>
       {children}
