@@ -15,7 +15,7 @@ function Login() {
 
   const [error, setError] = useState<string>('');
 
-  const {setAuth} = useAuth()
+  const {setAuth, auth} = useAuth()
   const navigate = useNavigate();
 
   // const [success, setSuccess] = useState(false)
@@ -25,6 +25,12 @@ function Login() {
       emailInpRef?.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if(auth?.user.id){
+      navigate('/')
+    }
+  }, [auth])
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginData((prev) => ({
@@ -50,6 +56,16 @@ function Login() {
           console.log("resposne -----> ", resposne.data);
           const data = resposne.data.data
           console.log({data});
+
+          const authObj = {
+            tokens: data.tokens,
+            user: {
+              email : data.user.email,
+              id :data.user._id,
+              isAdmin :data.user.isAdmin,
+              name : data.user.name
+            }
+          }
           
           setAuth({
             tokens: data.tokens,
@@ -61,6 +77,7 @@ function Login() {
             }
           })
 
+          localStorage.setItem('auth', JSON.stringify(authObj))
           navigate('/')
           
       } catch(err) {

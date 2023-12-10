@@ -16,6 +16,7 @@ export interface IAuthObject {
 export interface AuthContextInterface {
     auth:IAuthObject,
     setAuth: React.Dispatch<React.SetStateAction<IAuthObject>>
+    logout: () => void
 }
   
 export interface AuthProviderProps {

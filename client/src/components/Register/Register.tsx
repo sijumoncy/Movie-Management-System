@@ -27,7 +27,7 @@ function Register() {
     rePassword: "",
   });
 
-  const {setAuth} = useAuth()
+  const {setAuth, auth} = useAuth()
 
   const navigate = useNavigate();
   
@@ -39,6 +39,13 @@ function Register() {
       userRef?.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if(auth?.user.id){
+      navigate('/')
+    }
+  }, [auth])
+
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRegistrationData((prev) => ({
@@ -101,6 +108,16 @@ function Register() {
           })
           console.log("resposne -----> ", resposne.data);
           const data = resposne.data
+          const authObj = {
+            tokens: data.tokens,
+            user: {
+              email : data.user.email,
+              id :data.user._id,
+              isAdmin :data.user.isAdmin,
+              name : data.user.name
+            }
+          }
+          
           setAuth({
             tokens: data.tokens,
             user: {
@@ -110,6 +127,8 @@ function Register() {
               name : data.user.name
             }
           })
+
+          localStorage.setItem('auth', JSON.stringify(authObj))
 
           navigate('/')
           
