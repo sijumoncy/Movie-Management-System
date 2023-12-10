@@ -1,7 +1,7 @@
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useContext, useEffect, useRef, useState } from "react";
 import { ILogin } from "../../Interface/Login";
-import { EMAIL_INPUT_REGEX } from "../../constant/regex";
 import axios from "../../api/axios";
+import { AuthContext } from "../../context/authContext";
 
 function Login() {
   const emailInpRef = useRef<HTMLInputElement>(null);
@@ -12,6 +12,10 @@ function Login() {
   });
 
   const [error, setError] = useState<string>('');
+
+  const {setAuth, auth} = useContext(AuthContext)
+
+  console.log({auth});
 
   // const [success, setSuccess] = useState(false)
 
@@ -43,6 +47,18 @@ function Login() {
             withCredentials:true
           })
           console.log("resposne -----> ", resposne.data);
+          const data = resposne.data.data
+          console.log({data});
+          
+          setAuth({
+            tokens: data.tokens,
+            user: {
+              email : data.email,
+              id :data._id,
+              isAdmin :data.isAdmin,
+              name : data.name
+            }
+          })
           
       } catch(err) {
         console.log("register errr", err);
