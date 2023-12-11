@@ -5,8 +5,9 @@ import ApiError from '../utils/apiError';
 import { IMovie } from '../interfaces/Movie';
 import { IAuthRequest } from '../interfaces/User';
 
-const createMovieService = async (movieBody: IMovie) => {
-  return MovieModel.create(movieBody);
+const createMovieService = async (movieBody: IMovie, req:IAuthRequest) => {
+  const created = await MovieModel.create({...movieBody, user: req.user?._id})
+  return created
 };
 
 const getMoviesService = async (

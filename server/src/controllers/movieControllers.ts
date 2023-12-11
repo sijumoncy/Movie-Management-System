@@ -3,9 +3,10 @@ import ApiError from '../utils/apiError';
 import { pickKeyValues } from '../utils/pickKeyValues';
 import { Request, Response } from 'express';
 import { createMovieService, deleteMovieByIdService, getMovieByIdService, getMoviesService, updateMovieByIdService } from '../services/movieServices';
+import { IAuthRequest } from '../interfaces/User';
 
-const createMovieController = async (req: Request, res: Response) => {
-  const movie = await createMovieService(req.body);
+const createMovieController = async (req: IAuthRequest, res: Response) => {
+  const movie = await createMovieService(req.body, req);
   res
     .status(httpStatus.CREATED)
     .json({ message: 'movie created successfully', data: movie });

@@ -6,6 +6,7 @@ let server:any;
 
 const port = config.port
 
+
 // connect to db and start server
 connectDB().then(() => {
     server = app.listen(port, () => {

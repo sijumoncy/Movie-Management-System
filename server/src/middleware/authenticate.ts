@@ -7,7 +7,7 @@ import { config } from '../config/config'
 import UserModel from '../models/User.model'
 
 
-const checkTokenInRequest = async (req:IAuthRequest, res:Response) => {
+const checkTokenInRequest = async (req:IAuthRequest, res:Response, next:NextFunction) => {
     try {
         const authHeader = (req && req.headers.authorization) || (req && req.headers.Authorization);
         const token = (authHeader && authHeader.split(' ')[1]) || req?.cookies?.authToken || req?.cookies?.accessToken || '';
@@ -17,23 +17,25 @@ const checkTokenInRequest = async (req:IAuthRequest, res:Response) => {
         }
 
         jwt.verify(token, config.jwt.secret as jwt.Secret, async (error:VerifyErrors|null, decodedUser:any) => {
+            
             if(error) {
                 const errorMsg = error.name === 'JsonWebTokenError' ? 'Unauthorized' : error.message;
                 throw new ApiError(httpStatus.FORBIDDEN,'errorMsg'); 
             }
             
             try {
-                const user = UserModel.findById(decodedUser.userId).select('-password')
+
+                const user = await UserModel.findById(decodedUser.sub).select('-password')
                 if(!user) {
                     throw new ApiError(httpStatus.FORBIDDEN, 'unable to authorize');
                 }
                 req.user = user as any
-            }catch(err) {
+                next()
+            }catch(err) {        
                 throw new ApiError(httpStatus.UNAUTHORIZED, 'authentication failed');
             }
         });
         
-        return true;
     } catch(err) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'authentication failed')
     }
@@ -41,9 +43,10 @@ const checkTokenInRequest = async (req:IAuthRequest, res:Response) => {
 
 const authenticate = async (req:IAuthRequest, res:Response, next:NextFunction) => {
     try{
-        const authenticated = await checkTokenInRequest(req, res)
-        if(!authenticated) return res.status(httpStatus.UNAUTHORIZED).send("Unauthorized")
-        next()
+        await checkTokenInRequest(req, res, next)
+        // const authenticated = await checkTokenInRequest(req, res)
+        // if(!authenticated) return res.status(httpStatus.UNAUTHORIZED).send("Unauthorized")
+        // next()
     }catch(err) {
        throw new ApiError(httpStatus.UNAUTHORIZED, 'authentication failed')
     }

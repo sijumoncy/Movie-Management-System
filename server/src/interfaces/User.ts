@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Document } from "mongoose"
+import { Document, Schema } from "mongoose"
 
 export interface IUser extends Document {
     name:string;

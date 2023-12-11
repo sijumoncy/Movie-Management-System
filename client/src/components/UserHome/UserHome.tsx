@@ -28,7 +28,9 @@ function UserHome() {
     },[currentMenu])
 
   return (
-    loadCurrentComponent()
+    <div className="mt-10 mx-10 min-h-[80vh] outline">
+        {loadCurrentComponent()}
+    </div>
   )
 }
 

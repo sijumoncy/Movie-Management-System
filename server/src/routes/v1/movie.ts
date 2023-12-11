@@ -1,6 +1,6 @@
 import express from 'express';
 import validate from '../../middleware/validate';
-import { createUser, deleteUser, getUser, getUsers, updateUser } from '../../validations/userValidation';
+import { addMovie, getMovie, getMovies, updateMovie, deleteMovie } from '../../validations/movieValidation';
 import {  } from '../../controllers/userControllers';
 import { authenticate } from '../../middleware/authenticate';
 import { createMovieController, deleteMovieController, getMovieController, getMoviesController, updateMovieController } from '../../controllers/movieControllers';
@@ -9,13 +9,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(authenticate, validate(createUser), createMovieController)
-  .get(validate(getUsers), getMoviesController);
+  .post(authenticate, validate(addMovie), createMovieController)
+  .get(validate(getMovies), getMoviesController);
 
 router
   .route('/:movieId')
-  .get(validate(getUser), getMovieController)
-  .patch(authenticate, validate(updateUser), updateMovieController)
-  .delete(authenticate, validate(deleteUser), deleteMovieController);
+  .get(validate(getMovie), getMovieController)
+  .patch(authenticate, validate(updateMovie), updateMovieController)
+  .delete(authenticate, validate(deleteMovie), deleteMovieController);
 
 export default router; 
