@@ -6,10 +6,12 @@ import { toast } from "react-toastify";
 
 export const MovieEditAndDeleteUI = ({
   movieId,
-  doRefresh,
+  setRefreshUI,
+  setEditMovie,
 }: {
   movieId: string;
-  doRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefreshUI: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMovie?:React.Dispatch<React.SetStateAction<{ edit: boolean; movieId: string; }>>
 }) => {
   const { auth } = useAuth();
 
@@ -20,12 +22,18 @@ export const MovieEditAndDeleteUI = ({
       toast.error("faield to delete movie");
     } else if (response.success) {
       toast.success("movie deleted successfully");
-      doRefresh(true)
+      setRefreshUI(true)
     }
   };
 
   const handleEditMovie = async () => {
     console.log("in edit");
+    if(setEditMovie) {
+        setEditMovie({edit:true, movieId:movieId})
+    }else{
+        console.log("can not edit , can not call");
+        
+    }
   };
 
   return (

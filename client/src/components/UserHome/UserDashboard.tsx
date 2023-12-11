@@ -22,10 +22,12 @@ function UserDashboard() {
   const [modalTitle, setModalTitle] = useState("");
   const [addOrEditMovie, setAddorEditMovie] = useState("add");
   const [startProcess, setStartProcess] = useState(false);
+  const [refreshUI, setRefreshUI] = useState(false);
 
   const [userMovieList, setUserMovieList] = useState<IMovieResposne[] | []>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [editMovie, setEditMovie] = useState({edit:false, movieId:''})
 
   const {auth} = useAuth()
 
@@ -37,17 +39,26 @@ function UserDashboard() {
   const closeModal = () => {
     setModalOpen(false);
     setStartProcess(false);
+    setEditMovie({edit:false, movieId:''})
   };
 
   useEffect(() => {
-    if(startProcess) {
+    if(editMovie.edit) {
+      setAddorEditMovie("edit")
+      setModalTitle("Update Movie");
+      openModal()
+    }
+  },[editMovie])
+
+  useEffect(() => {
+    if(refreshUI) {
       const timer = setTimeout(() => {
         setStartProcess(false)
       },1000)
 
       return () => clearTimeout(timer)
     }
-  },[startProcess])
+  },[refreshUI])
 
   useEffect(() => {
     // get all user specific data for listing
@@ -63,9 +74,9 @@ function UserDashboard() {
         setError("failed to fetch movie");
       }
     })();
-  }, [startProcess]);
+  }, [startProcess, refreshUI]);
 
-  const handleAddMovie = async () => {
+  const triggerModalFunction = async () => {
     setStartProcess(true);
     console.log("click handle process");
   };
@@ -93,9 +104,10 @@ function UserDashboard() {
         {!loading && !error && (
           <MovieList
             movieList={userMovieList}
-            setStartProcess={setStartProcess}
+            setRefreshUI={setRefreshUI}
             displayFields={displayFields}
             extraFeature={true}
+            setEditMovie={setEditMovie}
           />
         )}
       </div>
@@ -104,7 +116,7 @@ function UserDashboard() {
         isOpen={isModalOpen}
         onClose={closeModal}
         title={modalTitle}
-        action={{ buttonName: "create", onAction: handleAddMovie }}
+        action={addOrEditMovie === 'edit' ? { buttonName: "update", onAction: triggerModalFunction } : { buttonName: "create", onAction: triggerModalFunction }}
         loading={startProcess}
       >
         <MovieModal
@@ -112,6 +124,7 @@ function UserDashboard() {
           startProcess={startProcess}
           setStartProcess={setStartProcess}
           onClose={closeModal}
+          movieId = {editMovie.movieId}
         />
       </Modal>
     </div>

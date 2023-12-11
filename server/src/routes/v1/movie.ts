@@ -8,14 +8,14 @@ import { createMovieController, deleteMovieController, getMovieController, getMo
 const router = express.Router();
 
 router
+  .route('/:movieId')
+  .patch(authenticate, validate(updateMovie), updateMovieController)
+  .get(validate(getMovie), getMovieController)
+  .delete(authenticate, validate(deleteMovie), deleteMovieController);
+
+router
   .route('/')
   .post(authenticate, validate(addMovie), createMovieController)
   .get(validate(getMovies), getMoviesController);
-
-router
-  .route('/:movieId')
-  .get(validate(getMovie), getMovieController)
-  .patch(authenticate, validate(updateMovie), updateMovieController)
-  .delete(authenticate, validate(deleteMovie), deleteMovieController);
 
 export default router; 

@@ -13,8 +13,8 @@ const createMovieController = async (req: IAuthRequest, res: Response) => {
 };
 
 const getMoviesController = async (req: Request, res: Response) => {
-  console.log("in movie conteoller");
-  
+    console.log("in get buy odafag 000000000000000");
+    
     const filter = pickKeyValues(req.query, ['title', 'releaseYear', 'genres', 'director', 'language', 'user']);
     const compareFilters = pickKeyValues(req.query, ['rating']);
     const options = pickKeyValues(req.query, ['limit', 'page']);
@@ -27,10 +27,12 @@ const getMovieController = async (req: Request, res: Response) => {
     if (!movie) {
       throw new ApiError(httpStatus.NOT_FOUND, 'movie not found');
     }
-    res.send(movie);
+    res.json({data:movie});
 };
 
 const updateMovieController = async (req: Request, res: Response) => {
+  console.log("in path -------------");
+  
     const movie = await updateMovieByIdService(req.params.movieId, req.body, req);
     res.status(httpStatus.OK).json({ message: 'movie updated successfully', data: movie });
   };

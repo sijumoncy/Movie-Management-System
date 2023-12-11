@@ -7,12 +7,14 @@ import { IMovieInput } from "../../Interface/movie";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { toast } from 'react-toastify';
+import { getMovie } from "../../utils/getMovie";
 
 interface MovieModalI {
   action: string;
   startProcess: boolean
   setStartProcess: React.Dispatch<React.SetStateAction<boolean>>
   onClose: () => void
+  movieId?: string 
 }
 
 const movieInputData = [
@@ -33,7 +35,7 @@ const movieInputData = [
   { fieldName: "language", inputType: "text", required: true },
 ];
 
-function MovieModal({ action, startProcess, setStartProcess, onClose }: MovieModalI) {
+function MovieModal({ action, startProcess, setStartProcess, onClose, movieId }: MovieModalI) {
   const [movieData, setMovieData] = useState<IMovieInput | null>(null);
   const [errmsg, setErrMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
@@ -43,16 +45,79 @@ function MovieModal({ action, startProcess, setStartProcess, onClose }: MovieMod
   console.log({startProcess});
   
 
-  useEffect(() => {
-    if (action === "edit") {
-      // get the current item values
+  const getMovieData = async () => {
+    const response = await getMovie(auth.tokens.access.token, movieId || '')
+    if(response.error) {
+      setErrMsg("unable to get the movie data")
+    } else if(response.success) {
+      const movieData = response.data as IMovieInput
+      if(movieData.genres && Array.isArray(movieData.genres)) {
+        movieData.genres = movieData.genres.toString()
+      }
+      setMovieData(movieData)
+      console.log({response});
     }
-  }, [action]);
+    
+  }
+
+  useEffect(() => {
+    if (action === "edit" && movieId) {
+      // get the current item values
+      getMovieData()
+    }
+  }, [action, movieId]);
+
+  const updateMovieData = async () => {
+    console.log("in update movie data");
+    if(movieData && movieData["title"] && movieData["releaseYear"] && movieData["director"] && movieData["language"]) {
+      console.log(movieData.genres);
+        const generesArr = movieData.genres.split(',')
+        try{
+          if(generesArr.length > 0) {
+            setErrMsg('')
+            console.log("sending edit req");
+            
+            const resposne = await axios.patch(`/movies/${movieId}`, JSON.stringify({
+                title: movieData.title ,
+                description: movieData.description || '',
+                releaseYear: movieData.releaseYear,
+                releaseMonth: movieData.releaseMonth,
+                releaseDate: movieData.releaseDate,
+                rating: movieData.rating,
+                duration: movieData.duration,
+                director: movieData.director,
+                language: movieData.language,
+                genres : generesArr,
+              }),{
+                headers: {'Content-Type':'application/json', 
+                    Authorization : `bearer ${auth.tokens.access.token}`},
+                withCredentials:true
+                
+              })
+              console.log("update resposne : ",  {resposne});
+              
+              toast.success(resposne.data.message);
+              setMovieData(null)
+              setStartProcess(false)
+              onClose()
+              
+        } else {
+            setErrMsg('At lease one genere is required')
+            setStartProcess(false)
+        }
+        } catch(err) {
+          toast.error("error updating movie");
+          setStartProcess(false)
+        }
+    }
+    
+  }
 
   const validateAddMovieAndCreate = async () => {
     // simple validation - imlement later detailed validation
     // only check for mandidatory fields
     if(movieData && movieData["title"] && movieData["releaseYear"] && movieData["director"] && movieData["language"]) {
+      console.log("in create", movieData.genres);
         const generesArr = movieData.genres.split(',')
         try{
           if(generesArr.length > 0) {
@@ -88,8 +153,11 @@ function MovieModal({ action, startProcess, setStartProcess, onClose }: MovieMod
   useEffect(() => {
     if(startProcess) {
         console.log({startProcess});
-        
-        validateAddMovieAndCreate()
+        if(action === 'edit') {
+          updateMovieData()
+        } else {
+          validateAddMovieAndCreate()
+        }
     }
   },[startProcess])
 
@@ -125,6 +193,7 @@ function MovieModal({ action, startProcess, setStartProcess, onClose }: MovieMod
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleInputChange(e)
               }
+              value={movieData && movieData[field.fieldName]}
               aria-describedby="title is requiered"
             />
           </div>

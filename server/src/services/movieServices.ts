@@ -39,11 +39,15 @@ const updateMovieByIdService = async (
   },
   req: IAuthRequest
 ) => {
+  console.log({updateBody});
+  
   let movie;
   if (req.user?.isAdmin) {
     movie = await getMovieByIdService(movieId);
   } else {
     movie = await MovieModel.find({ _id: movieId, userId: req.user?._id });
+    console.log("movie from db ========> ", movie);
+    
     movie = movie.length > 0 ? movie[0] : undefined;
   }
   if (!movie) {

@@ -5,14 +5,16 @@ interface IMovieListInp {
   movieList: IMovieResposne[];
   displayFields: string[];
   extraFeature?: boolean;
-  setStartProcess?:React.Dispatch<React.SetStateAction<boolean>>
+  setRefreshUI?:React.Dispatch<React.SetStateAction<boolean>>
+  setEditMovie?:React.Dispatch<React.SetStateAction<{ edit: boolean; movieId: string; }>>
 }
 
 function MovieList({
   movieList,
   displayFields,
   extraFeature,
-  setStartProcess,
+  setRefreshUI,
+  setEditMovie,
 }: IMovieListInp) {
   console.log({ movieList });
   return (
@@ -48,7 +50,7 @@ function MovieList({
             {/* extra fucntional part */}
             {extraFeature && (
             <div className="p-2 mt-5 border-t"> 
-                <MovieEditAndDeleteUI key={movie._id} movieId={movie._id} doRefresh={setStartProcess}/>
+                <MovieEditAndDeleteUI key={movie._id} movieId={movie._id} setRefreshUI={setRefreshUI} setEditMovie={setEditMovie}/>
             </div>
             )}
           </div>
