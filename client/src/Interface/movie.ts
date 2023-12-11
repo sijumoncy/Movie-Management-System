@@ -13,6 +13,7 @@ export interface IMovieInput {
 }
 
 export interface IMovieResposne {
+    _id:string,
     title: string,
     description?:string,
     releaseYear:string,

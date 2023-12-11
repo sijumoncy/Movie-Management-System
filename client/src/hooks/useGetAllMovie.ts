@@ -10,7 +10,6 @@ const useGetAllMovie = () => {
   const getAllMovie = async () => {
     try {
       const resposne = await axios.get("/movies");
-      console.log("all movie : ", { resposne });
       setAllCollection(resposne.data);
       setError("");
       setLoading(false);
