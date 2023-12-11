@@ -19,9 +19,7 @@ const getMoviesService = async (
   compareFilters: { rating?: { min: number; max: number } }
 ) => {
   const pageNum = (options.limit || 100) * (options.page || 0);
-  const compareQry = generateMinMaxDbQuery(compareFilters);
-  console.log("fitlters ========" ,{filter});
-  
+  const compareQry = generateMinMaxDbQuery(compareFilters);  
   const movie = await MovieModel.find({ ...filter, ...compareQry })
     .select('-user')
     .limit(options.limit || 100)
@@ -61,8 +59,12 @@ let deletedMovie;
   if (req.user?.isAdmin) {
     deletedMovie = await MovieModel.findByIdAndDelete(movieId);
   } else {
-    deletedMovie = await MovieModel.findOneAndDelete({_id:movieId, userId: req.user?._id});
+    console.log("in this condition --------- : ", movieId, req.user );
+    
+    deletedMovie = await MovieModel.findOneAndDelete({_id:movieId, user: req.user?._id});
   }
+  console.log({deletedMovie});
+  
   if (!deletedMovie) {
     throw new ApiError(httpStatus.NOT_FOUND, 'movie not found');
   }

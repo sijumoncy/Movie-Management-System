@@ -1,18 +1,18 @@
-import { ReactNode } from "react";
 import { IMovieResposne } from "../../Interface/movie";
+import { MovieEditAndDeleteUI } from "./MovieEditandDelete";
 
 interface IMovieListInp {
   movieList: IMovieResposne[];
   displayFields: string[];
   extraFeature?: boolean;
-  FucntionalComponent?: ReactNode;
+  setStartProcess?:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function MovieList({
   movieList,
   displayFields,
   extraFeature,
-  FucntionalComponent,
+  setStartProcess,
 }: IMovieListInp) {
   console.log({ movieList });
   return (
@@ -46,9 +46,9 @@ function MovieList({
               )}
             </div>
             {/* extra fucntional part */}
-            {extraFeature && FucntionalComponent && (
+            {extraFeature && (
             <div className="p-2 mt-5 border-t"> 
-            {FucntionalComponent}
+                <MovieEditAndDeleteUI key={movie._id} movieId={movie._id} doRefresh={setStartProcess}/>
             </div>
             )}
           </div>

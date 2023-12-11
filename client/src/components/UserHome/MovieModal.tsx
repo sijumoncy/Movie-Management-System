@@ -69,7 +69,6 @@ function MovieModal({ action, startProcess, setStartProcess, onClose }: MovieMod
                 withCredentials:true
                 
               })
-              console.log({resposne});
               toast.success(resposne.data.message);
               setMovieData(null)
               setStartProcess(false)

@@ -23,7 +23,7 @@ const getMoviesController = async (req: Request, res: Response) => {
   };
 
 const getMovieController = async (req: Request, res: Response) => {
-    const movie = await getMovieByIdService(req.params.productId);
+    const movie = await getMovieByIdService(req.params.movieId);
     if (!movie) {
       throw new ApiError(httpStatus.NOT_FOUND, 'movie not found');
     }
@@ -31,13 +31,13 @@ const getMovieController = async (req: Request, res: Response) => {
 };
 
 const updateMovieController = async (req: Request, res: Response) => {
-    const movie = await updateMovieByIdService(req.params.productId, req.body, req);
+    const movie = await updateMovieByIdService(req.params.movieId, req.body, req);
     res.status(httpStatus.OK).json({ message: 'movie updated successfully', data: movie });
   };
   
   const deleteMovieController = async (req: Request, res: Response) => {
-    const deletedProduct = await deleteMovieByIdService(req.params.productId, req);
-    res.status(httpStatus.OK).send(deletedProduct);
+    const deletedProduct = await deleteMovieByIdService(req.params.movieId, req);
+    res.status(httpStatus.OK).json({ message: 'movie deleted successfully', data: deletedProduct });
   };
 
 export {

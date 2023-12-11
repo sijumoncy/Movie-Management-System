@@ -5,8 +5,6 @@ import MovieModal from "./MovieModal";
 import axios from "../../api/axios";
 import { IMovieResposne } from "../../Interface/movie";
 import MovieList from "./MovieList";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
 
 const displayFields = [
@@ -18,15 +16,6 @@ const displayFields = [
   "director",
   "language",
 ];
-
-const EditAndDeleteUI = () => {
-  return (
-    <div className="flex gap-5 justify-end">
-      <FaRegEdit className="w-6 h-6 cursor-pointer hover:text-green-500"/>
-      <MdDelete className="w-6 h-6 cursor-pointer hover:text-red-500"/>
-    </div>
-  );
-};
 
 function UserDashboard() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -49,6 +38,16 @@ function UserDashboard() {
     setModalOpen(false);
     setStartProcess(false);
   };
+
+  useEffect(() => {
+    if(startProcess) {
+      const timer = setTimeout(() => {
+        setStartProcess(false)
+      },1000)
+
+      return () => clearTimeout(timer)
+    }
+  },[startProcess])
 
   useEffect(() => {
     // get all user specific data for listing
@@ -94,9 +93,9 @@ function UserDashboard() {
         {!loading && !error && (
           <MovieList
             movieList={userMovieList}
+            setStartProcess={setStartProcess}
             displayFields={displayFields}
             extraFeature={true}
-            FucntionalComponent={<EditAndDeleteUI />}
           />
         )}
       </div>
