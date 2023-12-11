@@ -31,7 +31,6 @@ const getMovieController = async (req: Request, res: Response) => {
 };
 
 const updateMovieController = async (req: Request, res: Response) => {
-  console.log("in path -------------");
   
     const movie = await updateMovieByIdService(req.params.movieId, req.body, req);
     res.status(httpStatus.OK).json({ message: 'movie updated successfully', data: movie });

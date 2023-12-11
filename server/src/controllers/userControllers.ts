@@ -9,7 +9,7 @@ const createUserController = async (req: IAuthRequest, res: Response) => {
     const user = await createUserService(req.body);
     res
       .status(httpStatus.CREATED)
-      .json({ message: 'user created successfully', data: user });
+      .json({ message: 'user created successfully', data: user, statusCode:201 });
 };
 
 const getUsersController = async (req: IAuthRequest, res: Response) => {
@@ -22,7 +22,8 @@ const getUsersController = async (req: IAuthRequest, res: Response) => {
 const getUserController = async (req: IAuthRequest, res: Response) => {
   const user = await getUserByIdService(req.params.userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    // throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    res.send(httpStatus.NOT_FOUND).json({message: "user not found", statusCode:404})
   }
   res.send(user);
 };

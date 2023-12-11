@@ -46,7 +46,6 @@ const updateMovieByIdService = async (
     movie = await getMovieByIdService(movieId);
   } else {
     movie = await MovieModel.find({ _id: movieId, userId: req.user?._id });
-    console.log("movie from db ========> ", movie);
     
     movie = movie.length > 0 ? movie[0] : undefined;
   }
@@ -63,7 +62,6 @@ let deletedMovie;
   if (req.user?.isAdmin) {
     deletedMovie = await MovieModel.findByIdAndDelete(movieId);
   } else {
-    console.log("in this condition --------- : ", movieId, req.user );
     
     deletedMovie = await MovieModel.findOneAndDelete({_id:movieId, user: req.user?._id});
   }
