@@ -4,6 +4,7 @@ import axios from "../../api/axios";
 
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
   const emailInpRef = useRef<HTMLInputElement>(null);
@@ -44,7 +45,6 @@ function Login() {
     // call login
     if(loginData.email && loginData.password) {
       setError('')
-      console.log({loginData})
       try{
         const resposne = await axios.post('/auth/login', JSON.stringify({
             email : loginData.email,
@@ -53,9 +53,7 @@ function Login() {
             headers: {'Content-Type':'application/json'},
             withCredentials:true
           })
-          console.log("resposne -----> ", resposne.data);
           const data = resposne.data.data
-          console.log({data});
 
           const authObj = {
             tokens: data.tokens,
@@ -82,6 +80,7 @@ function Login() {
           
       } catch(err) {
         console.log("register errr", err);
+        toast.error('login failed')
       }
     } else{
       console.log("fields required");

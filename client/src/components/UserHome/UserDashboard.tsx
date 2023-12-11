@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import Modal from "../modal/Modal";
 import MovieModal from "./MovieModal";
-import { toast } from 'react-toastify';
 
 function UserDashboard() {
   const [isModalOpen, setModalOpen] = useState(false);

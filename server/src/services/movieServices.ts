@@ -20,7 +20,7 @@ const getMoviesService = async (
 ) => {
   const pageNum = (options.limit || 100) * (options.page || 0);
   const compareQry = generateMinMaxDbQuery(compareFilters);
-  const movie = await MovieModel.find({ filter, ...compareQry })
+  const movie = await MovieModel.find({ ...filter, ...compareQry })
     .select('-user')
     .limit(options.limit || 100)
     .skip(pageNum)

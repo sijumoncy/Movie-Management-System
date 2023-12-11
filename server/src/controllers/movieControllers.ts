@@ -13,6 +13,8 @@ const createMovieController = async (req: IAuthRequest, res: Response) => {
 };
 
 const getMoviesController = async (req: Request, res: Response) => {
+  console.log("in movie conteoller");
+  
     const filter = pickKeyValues(req.query, ['title', 'releaseYear', 'genres', 'director', 'language']);
     const compareFilters = pickKeyValues(req.query, ['rating']);
     const options = pickKeyValues(req.query, ['limit', 'page']);

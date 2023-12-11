@@ -14,9 +14,6 @@ function Navbar() {
 
   const {currentMenu, setCurrentMenu} = useAppContext()
 
-  console.log({currentMenu});
-  
-
   return (
     <div className="w-full max-w-4xl mx-auto h-16 flex items-center justify-between px-5 shadow-md  border-b border-b-primary">
       <div className="text-xl font-semibold cursor-pointer text-primary">

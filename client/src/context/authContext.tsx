@@ -35,11 +35,8 @@ const AuthContextProvider = ({ children }: AuthProviderProps) => {
   }
 
   useEffect(() => {
-    console.log("in useffect ");
-    
     const authState = localStorage.getItem('auth')
     if(authState){
-      console.log({auth});
       setAuth(JSON.parse(authState))
     }
   },[])

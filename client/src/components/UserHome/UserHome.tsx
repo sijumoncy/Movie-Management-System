@@ -13,9 +13,7 @@ function UserHome() {
     const {currentMenu} =  useAppContext()
 
     const loadCurrentComponent = () => {
-        const component = UserMenuAndComponents[currentMenu]
-        console.log({component});
-        
+        const component = UserMenuAndComponents[currentMenu]        
         if(component){
             return component
         } else {
